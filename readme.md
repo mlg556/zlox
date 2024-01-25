@@ -1,1 +1,1 @@
-the Lox language from [Robert Nystrom's *Crafting Interpreters* book](https://craftinginterpreters.com/), attempted in Zig.
+the Lox language (specifically the clox VM) from [Robert Nystrom's *Crafting Interpreters* book](https://craftinginterpreters.com/), attempted in Zig.
