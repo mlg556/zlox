@@ -14,7 +14,7 @@ pub fn main() !void {
     var chunk = Chunk.init(allocator);
     defer chunk.free();
 
-    const constant = try chunk.addConstant(42);
+    const constant = try chunk.addConstant(1.2);
     try chunk.write(@intFromEnum(OpCode.OP_CONSTANT));
     try chunk.write(constant);
 

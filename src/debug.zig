@@ -1,10 +1,14 @@
 const std = @import("std");
 
 const _chunk = @import("chunk.zig");
+const _value = @import("value.zig");
 
 const Chunk = _chunk.Chunk;
 const OpCode = _chunk.OpCode;
 const Code = _chunk.Code;
+
+const Value = _value.Value;
+const printValue = _value.printValue;
 
 const string = []const u8;
 
@@ -28,14 +32,22 @@ pub fn disassembleInstruction(chunk: *Chunk, offset: usize) usize {
 
     switch (instruction) {
         .OP_RETURN => return simpleInstruction("OP_RETURN", offset),
-        // else => {
-        //     print("Unknown OpCode {d}\n", .{instruction});
-        //     return offset + 1;
-        // },
+        .OP_CONSTANT => return constantInstruction("OP_CONSTANT", chunk, offset),
     }
 }
 
 pub fn simpleInstruction(name: string, offset: usize) usize {
     print("{s}\n", .{name});
     return offset + 1;
+}
+
+pub fn constantInstruction(name: string, chunk: *Chunk, offset: usize) usize {
+    const constant: u8 = chunk.code.items[offset + 1];
+    // printf("%-16s %4d '", name, constant);
+
+    print("{s} {d} ", .{ name, constant });
+    printValue(chunk.constants.values.items[constant - 1]);
+    print("\n", .{});
+
+    return offset + 2;
 }

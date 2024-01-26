@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub const Value = i32;
+pub const Value = f32;
 pub const Values = std.ArrayList(Value);
 
 pub const ValueArray = struct {
@@ -18,3 +18,7 @@ pub const ValueArray = struct {
         self.values.deinit();
     }
 };
+
+pub fn printValue(val: Value) void {
+    std.debug.print("'{d:.2}'", .{val});
+}
