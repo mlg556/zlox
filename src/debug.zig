@@ -24,7 +24,7 @@ pub fn disassembleChunk(chunk: *Chunk, name: string) void {
 pub fn disassembleInstruction(chunk: *Chunk, offset: usize) usize {
     print("{d:0>4} ", .{offset});
 
-    const instruction = chunk.code.items[offset];
+    const instruction: OpCode = @enumFromInt(chunk.code.items[offset]);
 
     switch (instruction) {
         .OP_RETURN => return simpleInstruction("OP_RETURN", offset),
