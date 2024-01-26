@@ -1,20 +1,16 @@
 const std = @import("std");
 
-const _c = @import("chunk.zig");
-const Chunk = _c.Chunk;
-const OpCode = _c.OpCode;
+const _chunk = @import("chunk.zig");
+const Chunk = _chunk.Chunk;
+const OpCode = _chunk.OpCode;
 
 const debug = @import("debug.zig");
 
-pub fn main() !void {
-    // var buffer: [1000]u8 = undefined;
-    // var fba = std.heap.FixedBufferAllocator.init(&buffer);
-    // const allocator = fba.allocator();
+pub fn main() !void {}
 
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-
-    var chunk = Chunk.init(allocator);
+// test catches memory leaks (via std.testing.allocator), so we'll use that
+test "test" {
+    var chunk = Chunk.init(std.testing.allocator);
     defer chunk.free();
 
     const constant = try chunk.addConstant(1.2);
@@ -23,5 +19,7 @@ pub fn main() !void {
 
     try chunk.write(@intFromEnum(OpCode.OP_RETURN), 123);
 
-    debug.disassembleChunk(&chunk, "chunk0");
+    debug.disassembleChunk(&chunk, "test chunk");
+
+    try std.testing.expect(true);
 }
