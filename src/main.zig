@@ -11,13 +11,11 @@ pub fn main() !void {
     var chunk = Chunk.init(allocator);
     defer chunk.free();
 
+    const constant = try chunk.addConstant(42);
+    try chunk.write(.OP_CONSTANT);
+    try chunk.write(constant);
+
     try chunk.write(.OP_RETURN);
 
     debug.disassembleChunk(&chunk, "chunk0");
 }
-
-// test "chunky" {
-//     var chunk = Chunk.init(std.testing.allocator);
-//     try chunk.write(.OP_RETURN);
-//     debug.disassembleChunk(&chunk, "chunk0");
-// }
