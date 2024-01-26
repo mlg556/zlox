@@ -28,6 +28,14 @@ pub fn disassembleChunk(chunk: *Chunk, name: string) void {
 pub fn disassembleInstruction(chunk: *Chunk, offset: usize) usize {
     print("{d:0>4} ", .{offset});
 
+    // print line numbers
+    const lines = chunk.lines.items;
+    if (offset > 0 and lines[offset] == lines[offset - 1]) {
+        print("   | ", .{});
+    } else {
+        print("{d:4} ", .{lines[offset]});
+    }
+
     const instruction: OpCode = @enumFromInt(chunk.code.items[offset]);
 
     switch (instruction) {
@@ -45,9 +53,9 @@ pub fn constantInstruction(name: string, chunk: *Chunk, offset: usize) usize {
     const constant: u8 = chunk.code.items[offset + 1];
     // printf("%-16s %4d '", name, constant);
 
-    print("{s} {d} ", .{ name, constant });
+    print("{s:<16} {d:4} '", .{ name, constant });
     printValue(chunk.constants.values.items[constant - 1]);
-    print("\n", .{});
+    print("'\n", .{});
 
     return offset + 2;
 }
