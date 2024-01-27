@@ -1,3 +1,8 @@
+const std = @import("std");
+
+pub const string = []const u8;
+pub const print = std.debug.print;
+
 pub const chunk = @import("chunk.zig");
 pub const debug = @import("debug.zig");
 pub const value = @import("value.zig");

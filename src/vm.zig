@@ -19,13 +19,26 @@ pub const VM = struct {
 
     fn run(vm: *VM) InterpretResult {
         while (true) {
-            const instruction: z.OpCode = @enumFromInt(vm.chunk.code.items[vm.ip]);
-            vm.ip += 1;
+            const instruction = vm.read_byte();
             switch (instruction) {
                 .OP_RETURN => return .OK,
-                .OP_CONSTANT => {},
+                .OP_CONSTANT => {
+                    const constant: z.Value = vm.read_constant();
+                    z.printValue(constant);
+                    z.print("\n", .{});
+                },
             }
         }
+    }
+
+    fn read_byte(vm: *VM) z.OpCode {
+        defer vm.ip += 1;
+        return @enumFromInt(vm.chunk.code.items[vm.ip]);
+    }
+
+    fn read_constant(vm: *VM) z.Value {
+        defer vm.ip += 1;
+        return vm.chunk.constants.values.items[vm.ip - 1];
     }
 
     pub fn free() void {}
