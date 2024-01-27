@@ -1,20 +1,12 @@
 const std = @import("std");
 
-const _chunk = @import("chunk.zig");
-const _value = @import("value.zig");
-
-const Chunk = _chunk.Chunk;
-const OpCode = _chunk.OpCode;
-const Code = _chunk.Code;
-
-const Value = _value.Value;
-const printValue = _value.printValue;
+const z = @import("zlox.zig");
 
 const string = []const u8;
 
 const print = std.debug.print;
 
-pub fn disassembleChunk(chunk: *Chunk, name: string) void {
+pub fn disassembleChunk(chunk: *z.Chunk, name: string) void {
     // printf("== %s ==\n", name);
     print("== {s} ==\n", .{name});
 
@@ -25,7 +17,7 @@ pub fn disassembleChunk(chunk: *Chunk, name: string) void {
     }
 }
 
-pub fn disassembleInstruction(chunk: *Chunk, offset: usize) usize {
+pub fn disassembleInstruction(chunk: *z.Chunk, offset: usize) usize {
     print("{d:0>4} ", .{offset});
 
     // print line numbers
@@ -36,7 +28,7 @@ pub fn disassembleInstruction(chunk: *Chunk, offset: usize) usize {
         print("{d:4} ", .{lines[offset]});
     }
 
-    const instruction: OpCode = @enumFromInt(chunk.code.items[offset]);
+    const instruction: z.OpCode = @enumFromInt(chunk.code.items[offset]);
 
     switch (instruction) {
         .OP_RETURN => return simpleInstruction("OP_RETURN", offset),
@@ -49,12 +41,12 @@ pub fn simpleInstruction(name: string, offset: usize) usize {
     return offset + 1;
 }
 
-pub fn constantInstruction(name: string, chunk: *Chunk, offset: usize) usize {
+pub fn constantInstruction(name: string, chunk: *z.Chunk, offset: usize) usize {
     const constant: u8 = chunk.code.items[offset + 1];
     // printf("%-16s %4d '", name, constant);
 
     print("{s:<16} {d:4} '", .{ name, constant });
-    printValue(chunk.constants.values.items[constant - 1]);
+    z.printValue(chunk.constants.values.items[constant - 1]);
     print("'\n", .{});
 
     return offset + 2;

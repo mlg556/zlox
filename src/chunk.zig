@@ -1,8 +1,5 @@
 const std = @import("std");
-const _v = @import("value.zig");
-
-const Value = _v.Value;
-const ValueArray = _v.ValueArray;
+const z = @import("zlox.zig");
 
 pub const OpCode = enum(u8) { OP_RETURN, OP_CONSTANT };
 
@@ -16,13 +13,13 @@ pub const LineNum = std.ArrayList(usize);
 pub const Chunk = struct {
     code: Code,
     lines: LineNum,
-    constants: ValueArray,
+    constants: z.ValueArray,
 
     pub fn init(alloc: std.mem.Allocator) Chunk {
         return Chunk{
             .code = Code.init(alloc),
             .lines = LineNum.init(alloc),
-            .constants = ValueArray.init(alloc),
+            .constants = z.ValueArray.init(alloc),
         };
     }
 
@@ -37,7 +34,7 @@ pub const Chunk = struct {
         self.constants.free();
     }
 
-    pub fn addConstant(self: *Chunk, val: Value) !u8 {
+    pub fn addConstant(self: *Chunk, val: z.Value) !u8 {
         try self.constants.write(val);
         return @intCast(self.constants.values.items.len);
     }

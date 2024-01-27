@@ -1,31 +1,24 @@
 const std = @import("std");
-
-const _chunk = @import("chunk.zig");
-const Chunk = _chunk.Chunk;
-const OpCode = _chunk.OpCode;
-
-const _vm = @import("vm.zig");
-const VM = _vm.VM;
-
-const debug = @import("debug.zig");
+const z = @import("zlox.zig");
 
 pub fn main() !void {}
 
 // test catches memory leaks (via std.testing.allocator), so we'll use that
 test "test" {
-    var chunk = Chunk.init(std.testing.allocator);
+    var chunk = z.Chunk.init(std.testing.allocator);
     defer chunk.free();
 
-    var vm = VM.init(std.testing.allocator);
-    defer vm.free();
+    var vm = z.VM{};
 
     const constant = try chunk.addConstant(1.2);
-    try chunk.write(@intFromEnum(OpCode.OP_CONSTANT), 123);
+    try chunk.write(@intFromEnum(z.OpCode.OP_CONSTANT), 123);
     try chunk.write(constant, 123);
 
-    try chunk.write(@intFromEnum(OpCode.OP_RETURN), 123);
+    try chunk.write(@intFromEnum(z.OpCode.OP_RETURN), 123);
 
-    debug.disassembleChunk(&chunk, "test chunk");
+    z.disassembleChunk(&chunk, "test chunk");
+
+    _ = vm.interpret(&chunk);
 
     try std.testing.expect(true);
 }
