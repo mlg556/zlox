@@ -70,6 +70,10 @@ pub const VM = struct {
                     // z.printValue(constant);
                     // z.print("\n", .{});
                 },
+
+                .OP_NEGATE => {
+                    vm.push(-vm.pop());
+                },
             }
         }
     }

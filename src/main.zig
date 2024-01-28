@@ -16,6 +16,8 @@ test "test" {
     try chunk.write(@intFromEnum(z.OpCode.OP_CONSTANT), 123);
     try chunk.write(constant, 123);
 
+    try chunk.write(@intFromEnum(z.OpCode.OP_NEGATE), 123);
+
     try chunk.write(@intFromEnum(z.OpCode.OP_RETURN), 123);
 
     // z.disassembleChunk(&chunk, "test chunk");
