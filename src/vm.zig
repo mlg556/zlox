@@ -16,6 +16,8 @@ pub const VM = struct {
     /// to get the element on top of the stack, you do stack[stack_top]
     stack_top: usize = 0,
 
+    // can I use an array and a slice instead of a stack and index?
+
     // stack stuff
     fn reset_stack(vm: *VM) void {
         vm.stack_top = 0;
@@ -28,7 +30,7 @@ pub const VM = struct {
 
     pub fn pop(vm: *VM) z.Value {
         defer vm.stack_top -= 1;
-        return vm.stack[vm.stack_top];
+        return vm.stack[vm.stack_top - 1]; // off by 1?
     }
 
     pub fn init(vm: *VM) void {
@@ -45,15 +47,28 @@ pub const VM = struct {
     fn run(vm: *VM) InterpretResult {
         while (true) {
             if (z.DEBUG_TRACE_EXECUTION) {
+                z.print("          ", .{});
+                for (0..vm.stack_top) |i| {
+                    z.print("[ ", .{});
+                    z.printValue(vm.stack[i]);
+                    z.print(" ]", .{});
+                }
+                z.print("\n", .{});
                 _ = z.disassembleInstruction(&vm.chunk, vm.ip);
             }
+
             const instruction = vm.read_byte();
             switch (instruction) {
-                .OP_RETURN => return .OK,
-                .OP_CONSTANT => {
-                    const constant: z.Value = vm.read_constant();
-                    z.printValue(constant);
+                .OP_RETURN => {
+                    z.printValue(vm.pop());
                     z.print("\n", .{});
+                    return .OK;
+                },
+                .OP_CONSTANT => {
+                    const constant = vm.read_constant();
+                    vm.push(constant);
+                    // z.printValue(constant);
+                    // z.print("\n", .{});
                 },
             }
         }
@@ -66,7 +81,7 @@ pub const VM = struct {
 
     fn read_constant(vm: *VM) z.Value {
         defer vm.ip += 1;
-        return vm.chunk.constants.values.items[vm.ip - 1];
+        return vm.chunk.constants.values.items[vm.ip - 1]; // off by 1?
     }
 
     pub fn free() void {}
