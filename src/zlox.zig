@@ -1,5 +1,7 @@
 const std = @import("std");
 
+pub const DEBUG_TRACE_EXECUTION = true;
+
 pub const string = []const u8;
 pub const print = std.debug.print;
 
@@ -15,6 +17,7 @@ pub const Code = chunk.Code;
 pub const OpCode = chunk.OpCode;
 
 pub const disassembleChunk = debug.disassembleChunk;
+pub const disassembleInstruction = debug.disassembleInstruction;
 
 pub const Value = value.Value;
 pub const Values = value.Values;

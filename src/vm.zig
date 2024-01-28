@@ -19,6 +19,9 @@ pub const VM = struct {
 
     fn run(vm: *VM) InterpretResult {
         while (true) {
+            if (z.DEBUG_TRACE_EXECUTION) {
+                _ = z.disassembleInstruction(&vm.chunk, vm.ip);
+            }
             const instruction = vm.read_byte();
             switch (instruction) {
                 .OP_RETURN => return .OK,

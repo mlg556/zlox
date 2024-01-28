@@ -5,6 +5,8 @@ pub fn main() !void {}
 
 // test catches memory leaks (via std.testing.allocator), so we'll use that
 test "test" {
+    z.print(" \n", .{});
+
     var chunk = z.Chunk.init(std.testing.allocator);
     defer chunk.free();
 
@@ -16,7 +18,7 @@ test "test" {
 
     try chunk.write(@intFromEnum(z.OpCode.OP_RETURN), 123);
 
-    z.disassembleChunk(&chunk, "test chunk");
+    // z.disassembleChunk(&chunk, "test chunk");
 
     _ = vm.interpret(&chunk);
 
