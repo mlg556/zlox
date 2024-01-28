@@ -39,7 +39,6 @@ pub fn simpleInstruction(name: z.string, offset: usize) usize {
 }
 
 pub fn constantInstruction(name: z.string, chunk: *z.Chunk, offset: usize) usize {
-    z.print("OFFSET: {d}", .{offset});
     const constant: u8 = chunk.code.items[offset + 1];
 
     z.print("{s:<16} {d:4} '", .{ name, constant });

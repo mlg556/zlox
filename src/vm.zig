@@ -57,7 +57,7 @@ pub const VM = struct {
                 _ = z.disassembleInstruction(&vm.chunk, vm.ip);
             }
 
-            const instruction = vm.read_byte();
+            const instruction: z.OpCode = @enumFromInt(vm.read_byte());
             switch (instruction) {
                 .OP_RETURN => {
                     z.printValue(vm.pop());
@@ -78,14 +78,15 @@ pub const VM = struct {
         }
     }
 
-    fn read_byte(vm: *VM) z.OpCode {
+    fn read_byte(vm: *VM) u8 {
         defer vm.ip += 1;
-        return @enumFromInt(vm.chunk.code.items[vm.ip]);
+        return vm.chunk.code.items[vm.ip];
     }
 
     fn read_constant(vm: *VM) z.Value {
         defer vm.ip += 1;
-        return vm.chunk.constants.values.items[vm.ip - 1]; // off by 1?
+        return vm.chunk.constants.values.items[vm.read_byte()];
+        // return vm.chunk.constants.values.items[vm.ip - 1]; // off by 1?
     }
 
     pub fn free() void {}
