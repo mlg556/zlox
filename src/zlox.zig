@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub const DEBUG_TRACE_EXECUTION = true;
+pub const DEBUG_TRACE_EXECUTION = false;
 
 pub const string = []const u8;
 pub const print = std.debug.print;

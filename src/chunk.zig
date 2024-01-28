@@ -36,6 +36,6 @@ pub const Chunk = struct {
 
     pub fn addConstant(self: *Chunk, val: z.Value) !u8 {
         try self.constants.write(val);
-        return @intCast(self.constants.values.items.len);
+        return @intCast(self.constants.values.items.len - 1);
     }
 };
