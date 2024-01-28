@@ -7,7 +7,7 @@ pub const InterpretResult = enum(u8) { OK, COMPILE_ERROR, RUNTIME_ERROR };
 
 pub const VM = struct {
     chunk: z.Chunk = undefined,
-    /// Instruction Pointer: it's an index, unline the original implementation
+    /// Instruction Pointer: it's an index, unlike the original implementation
     ip: usize = 0,
 
     stack: [STACK_MAX]z.Value = undefined,
@@ -54,6 +54,13 @@ pub const VM = struct {
                     z.print(" ]", .{});
                 }
                 z.print("\n", .{});
+                // Since disassembleInstruction() takes an integer byte offset and we store the current instruction reference as a direct pointer, we first do a little pointer math to convert ip back to a relative offset from the beginning of the bytecode. Then we disassemble the instruction that begins at that byte.
+                // disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
+                // WHAT IS THIS THOOO
+
+                // We initialize ip by pointing it at the first byte of code in the chunk. We haven’t executed that instruction yet, so ip points to the instruction about to be executed. This will be true during the entire time the VM is running: the IP always points to the next instruction, not the one currently being handled.
+
+                z.print("IP = {d}\n", .{vm.ip});
                 _ = z.disassembleInstruction(&vm.chunk, vm.ip);
             }
 
@@ -79,6 +86,8 @@ pub const VM = struct {
     }
 
     fn read_byte(vm: *VM) u8 {
+        // #define READ_BYTE() (*vm.ip++)
+
         defer vm.ip += 1;
         return vm.chunk.code.items[vm.ip];
     }
