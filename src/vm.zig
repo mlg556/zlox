@@ -60,7 +60,6 @@ pub const VM = struct {
 
                 // We initialize ip by pointing it at the first byte of code in the chunk. We haven’t executed that instruction yet, so ip points to the instruction about to be executed. This will be true during the entire time the VM is running: the IP always points to the next instruction, not the one currently being handled.
 
-                z.print("IP = {d}\n", .{vm.ip});
                 _ = z.disassembleInstruction(&vm.chunk, vm.ip);
             }
 
@@ -93,7 +92,7 @@ pub const VM = struct {
     }
 
     fn read_constant(vm: *VM) z.Value {
-        defer vm.ip += 1;
+        // defer vm.ip += 1;
         return vm.chunk.constants.values.items[vm.read_byte()];
         // return vm.chunk.constants.values.items[vm.ip - 1]; // off by 1?
     }
