@@ -1,7 +1,17 @@
 const std = @import("std");
 const z = @import("zlox.zig");
 
-pub const OpCode = enum(u8) { OP_RETURN, OP_CONSTANT, OP_NEGATE };
+pub const OpCode = enum(u8) {
+    OP_RETURN,
+    OP_CONSTANT,
+    // binary ops
+    OP_ADD,
+    OP_SUBTRACT,
+    OP_MULTIPLY,
+    OP_DIVIDE,
+    // unary ops
+    OP_NEGATE,
+};
 
 /// arraylist of bytes
 pub const Code = std.ArrayList(u8);

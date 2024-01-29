@@ -12,13 +12,33 @@ pub fn main() !void {
 
     var vm = z.VM{};
 
-    const constant = try chunk.addConstant(1.2);
-    try chunk.write(@intFromEnum(z.OpCode.OP_CONSTANT), 123);
-    try chunk.write(constant, 123);
+    // -((1.2 + 3.4) / 5.6) = -0.8214285714285714
+    //
+    //        |-|
+    //         |
+    //        |/|
+    //       /   \
+    //     |+|   |5.6|
+    //    /   \
+    // |1.2| |3.4|
 
-    // try chunk.write(@intFromEnum(z.OpCode.OP_NEGATE), 123);
+    var constant = try chunk.addConstant(1.2);
+    try chunk.write(@intFromEnum(z.OpCode.OP_CONSTANT), 1);
+    try chunk.write(constant, 1);
 
-    try chunk.write(@intFromEnum(z.OpCode.OP_RETURN), 123);
+    constant = try chunk.addConstant(3.4);
+    try chunk.write(@intFromEnum(z.OpCode.OP_CONSTANT), 1);
+    try chunk.write(constant, 1);
+
+    try chunk.write(@intFromEnum(z.OpCode.OP_ADD), 1);
+
+    constant = try chunk.addConstant(5.6);
+    try chunk.write(@intFromEnum(z.OpCode.OP_CONSTANT), 1);
+    try chunk.write(constant, 1);
+
+    try chunk.write(@intFromEnum(z.OpCode.OP_DIVIDE), 1);
+    try chunk.write(@intFromEnum(z.OpCode.OP_NEGATE), 1);
+    try chunk.write(@intFromEnum(z.OpCode.OP_RETURN), 1);
 
     // z.disassembleChunk(&chunk, "test chunk");
 

@@ -20,5 +20,5 @@ pub const ValueArray = struct {
 };
 
 pub fn printValue(val: Value) void {
-    std.debug.print("{d:.2}", .{val});
+    std.debug.print("{d:.4}", .{val});
 }

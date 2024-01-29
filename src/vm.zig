@@ -70,17 +70,36 @@ pub const VM = struct {
                     z.print("\n", .{});
                     return .OK;
                 },
+
                 .OP_CONSTANT => {
                     const constant = vm.read_constant();
                     vm.push(constant);
-                    // z.printValue(constant);
-                    // z.print("\n", .{});
                 },
+
+                .OP_ADD => vm.binary_op('+'),
+                .OP_SUBTRACT => vm.binary_op('-'),
+                .OP_MULTIPLY => vm.binary_op('*'),
+                .OP_DIVIDE => vm.binary_op('/'),
 
                 .OP_NEGATE => {
                     vm.push(-vm.pop());
                 },
             }
+        }
+    }
+
+    /// in lieu of the BINARY_OP macro, op is a single char like '+' or '*'
+    // maybe a way to do this by metaprogramming? idk
+    fn binary_op(vm: *VM, op: u8) void {
+        const b = vm.pop();
+        const a = vm.pop();
+
+        switch (op) {
+            '+' => vm.push(a + b),
+            '-' => vm.push(a - b),
+            '*' => vm.push(a * b),
+            '/' => vm.push(a / b),
+            else => {},
         }
     }
 

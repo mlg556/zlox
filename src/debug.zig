@@ -16,20 +16,21 @@ pub fn disassembleChunk(chunk: *z.Chunk, name: z.string) void {
 pub fn disassembleInstruction(chunk: *z.Chunk, offset: usize) usize {
     z.print("{d:0>4} ", .{offset});
 
-    // // print line numbers
-    // const lines = chunk.lines.items;
-    // if (offset > 0 and lines[offset] == lines[offset - 1]) {
-    //     z.print("   | ", .{});
-    // } else {
-    //     z.print("{d:4} ", .{lines[offset]});
-    // }
+    // print line numbers
+    const lines = chunk.lines.items;
+    if (offset > 0 and lines[offset] == lines[offset - 1]) {
+        z.print("   | ", .{});
+    } else {
+        z.print("{d:4} ", .{lines[offset]});
+    }
 
     const instruction: z.OpCode = @enumFromInt(chunk.code.items[offset]);
 
+    // lets avoid repetition by using @tagName
     switch (instruction) {
-        .OP_RETURN => return simpleInstruction("OP_RETURN", offset),
         .OP_CONSTANT => return constantInstruction("OP_CONSTANT", chunk, offset),
-        .OP_NEGATE => return simpleInstruction("OP_NEGATE", offset),
+        // the rest are simple instructions
+        else => return simpleInstruction(@tagName(instruction), offset),
     }
 }
 
