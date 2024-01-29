@@ -1,13 +1,15 @@
 const std = @import("std");
 const z = @import("zlox.zig");
 
-pub fn main() !void {
+pub fn main() !void {}
+
+test "machine code" {
     z.print(" \n", .{});
 
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
+    // var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    // const allocator = gpa.allocator();
 
-    var chunk = z.Chunk.init(allocator);
+    var chunk = z.Chunk.init(std.testing.allocator);
     defer chunk.free();
 
     var vm = z.VM{};

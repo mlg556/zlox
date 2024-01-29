@@ -9,6 +9,8 @@ pub const chunk = @import("chunk.zig");
 pub const debug = @import("debug.zig");
 pub const value = @import("value.zig");
 pub const vm = @import("vm.zig");
+pub const scanner = @import("scanner.zig");
+pub const compiler = @import("compiler.zig");
 
 // export
 
@@ -25,3 +27,5 @@ pub const ValueArray = value.ValueArray;
 pub const printValue = value.printValue;
 
 pub const VM = vm.VM;
+
+pub const Scanner = scanner.Scanner;

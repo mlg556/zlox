@@ -37,11 +37,16 @@ pub const VM = struct {
         vm.reset_stack();
     }
 
-    pub fn interpret(vm: *VM, chunk: *z.Chunk) InterpretResult {
-        vm.chunk = chunk.*;
-        vm.ip = 0;
+    // pub fn interpret(vm: *VM, chunk: *z.Chunk) InterpretResult {
+    //     vm.chunk = chunk.*;
+    //     vm.ip = 0;
 
-        return vm.run();
+    //     return vm.run();
+    // }
+
+    pub fn interpret(vm: *VM, source: z.string) InterpretResult {
+        compiler.compile(source);
+        return .OK;
     }
 
     fn run(vm: *VM) InterpretResult {
@@ -54,12 +59,6 @@ pub const VM = struct {
                     z.print(" ]", .{});
                 }
                 z.print("\n", .{});
-                // Since disassembleInstruction() takes an integer byte offset and we store the current instruction reference as a direct pointer, we first do a little pointer math to convert ip back to a relative offset from the beginning of the bytecode. Then we disassemble the instruction that begins at that byte.
-                // disassembleInstruction(vm.chunk, (int)(vm.ip - vm.chunk->code));
-                // WHAT IS THIS THOOO
-
-                // We initialize ip by pointing it at the first byte of code in the chunk. We haven’t executed that instruction yet, so ip points to the instruction about to be executed. This will be true during the entire time the VM is running: the IP always points to the next instruction, not the one currently being handled.
-
                 _ = z.disassembleInstruction(&vm.chunk, vm.ip);
             }
 
