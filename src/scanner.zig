@@ -79,13 +79,22 @@ pub const Scanner = struct {
         return Scanner{ .source = source, .start = 0, .current = 0, .line = 1 };
     }
 
+    fn is_digit(ch: u8) bool {
+        return ch >= '0' and ch <= '9';
+    }
+
     pub fn scan_token(scanner: *Scanner) Token {
+        scanner.skip_whitespace();
+
         scanner.start = scanner.current;
 
         if (scanner.is_at_end())
             return make_token(.EOF);
 
         const ch = scanner.advance();
+
+        if (is_digit(ch))
+            return scanner.number();
 
         switch (ch) {
             '(' => return scanner.make_token(.LEFT_PAREN),
@@ -105,6 +114,9 @@ pub const Scanner = struct {
             '=' => return scanner.make_token(if (scanner.match('=')) .EQUAL_EQUAL else .EQUAL),
             '<' => return scanner.make_token(if (scanner.match('=')) .LESS_EQUAL else .LESS),
             '>' => return scanner.make_token(if (scanner.match('=')) .GREATER_EQUAL else .GREATER),
+
+            // Number and string tokens are special because they have a runtime value associated with them.
+            '"' => return scanner.string(),
 
             else => return error_token("Unexpected character."),
         }
@@ -151,6 +163,37 @@ pub const Scanner = struct {
                 else => return,
             }
         }
+    }
+
+    fn number(scanner: *Scanner) Token {
+        while (is_digit(scanner.peek()))
+            scanner.advance();
+
+        if (scanner.peek() == '.' and is_digit(scanner.peek_next())) {
+            // Consume the ".".
+            scanner.advance();
+
+            // consume rest
+            while (is_digit(scanner.peek()))
+                scanner.advance();
+        }
+
+        return scanner.make_token(.NUMBER);
+    }
+
+    fn string(scanner: *Scanner) Token {
+        while (scanner.peek() != '"' and !scanner.is_at_end()) {
+            if (scanner.peek() == '\n')
+                scanner.line += 1;
+            scanner.advance();
+        }
+
+        if (scanner.is_at_end())
+            return scanner.error_token("Unterminated string.");
+
+        // The closing quote.
+        scanner.advance();
+        return scanner.make_token(.STRING);
     }
 
     fn advance(scanner: *Scanner) u8 {
