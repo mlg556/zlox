@@ -126,9 +126,46 @@ pub const Scanner = struct {
         return Token{ .token_type = .ERROR, .value = message, .line = scanner.line };
     }
 
+    fn skip_whitespace(scanner: *Scanner) void {
+        // could use std.ascii, but whatever
+        while (true) {
+            const ch = scanner.peek();
+            switch (ch) {
+                // common whitespace
+                ' ', '\r', '\t' => scanner.advance(),
+                // newline, increment linenumber
+                '\n' => {
+                    scanner.line += 1;
+                    scanner.advance();
+                },
+                // comments
+                '/' => {
+                    if (scanner.peek_next() == '/') {
+                        // A comment goes until the end of the line.
+                        while (scanner.peek() != '\n' and !scanner.is_at_end())
+                            scanner.advance();
+                    } else {
+                        return;
+                    }
+                },
+                else => return,
+            }
+        }
+    }
+
     fn advance(scanner: *Scanner) u8 {
         defer scanner.current += 1;
         return scanner.source[scanner.current];
+    }
+
+    fn peek(scanner: *Scanner) u8 {
+        return scanner.source[scanner.current];
+    }
+
+    fn peek_next(scanner: *Scanner) u8 {
+        if (scanner.is_at_end())
+            return 0;
+        return scanner.source[scanner.current + 1];
     }
 
     fn match(scanner: *Scanner, expected: u8) bool {
