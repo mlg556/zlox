@@ -134,7 +134,8 @@ pub const Scanner = struct {
     }
 
     fn is_at_end(scanner: *Scanner) bool {
-        return scanner.source[scanner.current] == '0';
+        return scanner.current == scanner.source.len;
+        // return scanner.source[scanner.current] == 0;
     }
 
     fn make_token(scanner: *Scanner, typ: TokenType) Token {
@@ -266,6 +267,9 @@ pub const Scanner = struct {
     }
 
     fn peek(scanner: *Scanner) u8 {
+        // book doesnt say this, but I think peek has to check if is at end, gives me index error otherwise.
+        if (scanner.is_at_end())
+            return 0;
         return scanner.source[scanner.current];
     }
 

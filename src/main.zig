@@ -2,7 +2,11 @@ const std = @import("std");
 const z = @import("zlox.zig");
 
 pub fn main() !void {
-    _ = z.VM.interpret("x=3");
+    const program =
+        \\ var z != for and;
+    ;
+    const ret = z.VM.interpret(program);
+    z.print("{s}", .{@tagName(ret)});
 }
 
 test "machine code" {
