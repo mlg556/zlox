@@ -29,3 +29,7 @@ pub const printValue = value.printValue;
 pub const VM = vm.VM;
 
 pub const Scanner = scanner.Scanner;
+pub const Token = scanner.Token;
+pub const TokenType = scanner.TokenType;
+
+pub const compile = compiler.compile;

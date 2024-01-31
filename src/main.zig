@@ -1,7 +1,9 @@
 const std = @import("std");
 const z = @import("zlox.zig");
 
-pub fn main() !void {}
+pub fn main() !void {
+    _ = z.VM.interpret("x=3");
+}
 
 test "machine code" {
     z.print(" \n", .{});

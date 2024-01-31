@@ -44,8 +44,8 @@ pub const VM = struct {
     //     return vm.run();
     // }
 
-    pub fn interpret(vm: *VM, source: z.string) InterpretResult {
-        compiler.compile(source);
+    pub fn interpret(source: z.string) InterpretResult {
+        z.compile(source);
         return .OK;
     }
 
