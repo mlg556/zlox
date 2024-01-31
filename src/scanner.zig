@@ -178,7 +178,15 @@ pub const Scanner = struct {
     }
 
     fn check_keyword(scanner: *Scanner, start: usize, length: usize, rest: z.string, token_type: TokenType) TokenType {
-        if (scanner.current - scanner.start == start + length and std.mem.eql(u8, scanner.source[scanner.start .. scanner.start + start], rest))
+        const len1 = scanner.current - scanner.start;
+        const len2 = start + length;
+
+        const str = scanner.source[scanner.start + start .. scanner.start + start + length];
+
+        // z.print("KEYWORD: {d} =? {d}\n", .{ len1, len2 });
+        // z.print("str: {s}\n", .{str});
+
+        if (len1 == len2 and std.mem.eql(u8, str, rest))
             return token_type;
 
         return .IDENTIFIER;

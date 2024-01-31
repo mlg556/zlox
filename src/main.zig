@@ -3,7 +3,7 @@ const z = @import("zlox.zig");
 
 pub fn main() !void {
     const program =
-        \\ var z != for and;
+        \\ var z = false;
     ;
     const ret = z.VM.interpret(program);
     z.print("{s}", .{@tagName(ret)});
