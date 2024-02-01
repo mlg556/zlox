@@ -1,26 +1,35 @@
 const std = @import("std");
 const z = @import("zlox.zig");
 
-pub fn compile(source: z.string) void {
-    var scanner = z.Scanner.init(source);
+pub const Parser = struct {
+    current: z.Token,
+    previous: z.Token,
 
-    var line: isize = -1;
-
-    while (true) {
-        const token: z.Token = scanner.scan_token();
-
-        if (token.line != line) {
-            z.print("{d:0>4} ", .{line});
-            line = token.line;
-        } else {
-            z.print("   | ", .{});
-        }
-
-        // That %.*s in the format string is a neat feature. Usually, you set the output precision—the number of characters to show—by placing a number inside the format string. Using * instead lets you pass the precision as an argument. So that printf() call prints the first token.length characters of the string at token.start. We need to limit the length like that because the lexeme points into the original source string and doesn’t have a terminator at the end.
-
-        // printf("%2d '%.*s'\n", token.type, token.length, token.start);
-        z.print("{s} '{s}'\n", .{ @tagName(token.token_type), token.value });
-
-        if (token.token_type == .EOF) break;
+    pub fn advance(p: *Parser) void {
+        _ = p;
     }
+
+    pub fn expression(p: *Parser) void {
+        _ = p;
+    }
+
+    pub fn consume(p: *Parser, token_type: z.TokenType, message: z.string) void {
+        _ = token_type; // autofix
+        _ = message; // autofix
+        _ = p;
+    }
+};
+
+pub fn compile(source: z.string, chunk: *z.Chunk) bool {
+    _ = chunk; // autofix
+    var scanner = z.Scanner.init(source);
+    _ = scanner; // autofix
+    var parser = Parser{
+        .current = undefined,
+        .previous = undefined,
+    };
+
+    parser.advance();
+    parser.expression();
+    parser.consume(.EOF, "Expect end of expression.");
 }

@@ -44,9 +44,23 @@ pub const VM = struct {
     //     return vm.run();
     // }
 
-    pub fn interpret(source: z.string) InterpretResult {
-        z.compile(source);
-        return .OK;
+    pub fn interpret(source: z.string, alloc: std.mem.Allocator) InterpretResult {
+        var vm = z.VM{};
+        var chunk = z.Chunk.init(alloc);
+
+        if (!z.compile(source, &chunk)) {
+            chunk.free();
+            return .COMPILE_ERROR;
+        }
+
+        vm.chunk = chunk.*;
+        vm.ip = 0;
+
+        const result = vm.run();
+
+        chunk.free();
+
+        return result;
     }
 
     fn run(vm: *VM) InterpretResult {
